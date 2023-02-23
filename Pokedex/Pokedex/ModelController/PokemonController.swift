@@ -5,7 +5,7 @@
 //  Created by Matthew Hill on 2/23/23.
 //
 
-import Foundation
+import UIKit
 
 class PokemonController {
     
@@ -44,5 +44,27 @@ class PokemonController {
             }
         } .resume()
         
+    }
+    
+    static func fetchImage(searchTerm: String, completion: @escaping (UIImage?) -> Void) {
+        guard let baseURL = URL(string: Constants.PokemonURL.baseURL) else { completion(nil) ; return}
+        var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
+        urlComponents?.path.append(contentsOf: searchTerm)
+        
+        guard let finalURL = urlComponents?.url else { completion(nil) ; return}
+        print(finalURL)
+        
+        URLSession.shared.dataTask(with: finalURL) { data, _ , error in
+            
+            if let error = error {
+                print(error.localizedDescription)
+                completion(nil)
+                return
+            }
+            guard let data = data else { completion(nil) ; return}
+            
+            let pokemonImage = UIImage(data: data)
+            completion(pokemonImage)
+        } .resume()
     }
 }
