@@ -14,36 +14,35 @@ class Pokemon {
     let moves: [String]
     let spritePath: String
     
-    init(name: String, id: Int, moves: [String], spritePath: String) {
-        self.name = name
-        self.id = id
-        self.moves = moves
-        self.spritePath = spritePath
-    }
-}
-
-extension Pokemon {
-    
     enum Keys: String {
         case name
         case id
         case moves
+        case move
         case sprites
-       case spritePath = "front_default"
-        
-        
+       case spritePath = "front_siny"
     }
     
-    convenience init?(dict: [String: Any]) {
+        init?(dict: [String: Any]) {
         
         guard let name = dict[Keys.name.rawValue] as? String,
               let id = dict[Keys.id.rawValue] as? Int,
-                let moves = dict[Keys.moves.rawValue] as? [String],
-              
-                let spriteDictionary = dict[Keys.sprites.rawValue] as? [String : Any],
-                let spritePath = spriteDictionary[Keys.spritePath.rawValue] as? String else { return nil }
-        
-        self.init(name: name, id: id, moves: moves, spritePath: spritePath)
+              let spriteDict = dict[Keys.sprites.rawValue] as? [String : Any],
+              let spritePath = spriteDict[Keys.spritePath.rawValue] as? String,
+              let movesArray = dict[Keys.moves.rawValue] as? [[String : Any]]
+            else {return nil}
             
+        var moves: [String] = []
+        
+        for dict in movesArray {
+            guard let moveDict = dict[Keys.move.rawValue] as? [String : Any],
+                  let moveName = moveDict[Keys.name.rawValue] as? String else { return nil}
+            moves.append(moveName)
+        }
+            self.name = name
+            self.id = id
+            self.moves = moves
+            self.spritePath = spritePath
+        
     }
 }
