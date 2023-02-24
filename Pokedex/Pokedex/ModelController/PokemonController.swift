@@ -13,7 +13,7 @@ class PokemonController {
         // I want to get the final url
         guard let baseURL = URL(string: Constants.PokemonURL.baseURL) else {completion(nil) ; return}
         var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
-        urlComponents?.path.append(contentsOf: searhTerm)
+        urlComponents?.path.append(contentsOf: searhTerm.lowercased())
         
         guard let finalURL = urlComponents?.url else {completion(nil); return}
         print(finalURL)
@@ -46,14 +46,8 @@ class PokemonController {
         
     }
     
-    static func fetchImage(searchTerm: String, completion: @escaping (UIImage?) -> Void) {
-        guard let baseURL = URL(string: Constants.PokemonURL.baseURL) else { completion(nil) ; return}
-        var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
-        urlComponents?.path.append(contentsOf: searchTerm)
-        
-        guard let finalURL = urlComponents?.url else { completion(nil) ; return}
-        print(finalURL)
-        
+    static func fetchImage(forPokemon: Pokemon, completion: @escaping (UIImage?) -> Void) {
+        guard let finalURL = URL(string: forPokemon.spritePath) else {completion(nil); return}
         URLSession.shared.dataTask(with: finalURL) { data, _ , error in
             
             if let error = error {

@@ -20,7 +20,7 @@ class Pokemon {
         case moves
         case move
         case sprites
-       case spritePath = "front_siny"
+       case spritePath = "front_shiny"
     }
     
         init?(dict: [String: Any]) {
